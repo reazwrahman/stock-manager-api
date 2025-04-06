@@ -2,16 +2,18 @@ package api.stock.manager.stock;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class Stock {
     protected String ticker;
-    protected Double quantity;
-    protected Double totalCost;
-    protected Double cost;
+    protected BigDecimal quantity;
+    protected BigDecimal totalCost;
+    protected BigDecimal cost;
 
 
     public Stock(){}
-    public Stock(String ticker, Double quantity, Double totalCost) {
+    public Stock(String ticker, BigDecimal quantity, BigDecimal totalCost) {
         this.ticker = ticker;
         this.quantity = quantity;
         this.totalCost =  totalCost;
@@ -19,6 +21,6 @@ public class Stock {
     }
 
     protected void findCostPerStock(){
-        this.cost = (this.totalCost) / this.quantity;
+        this.cost = (this.totalCost).divide(this.quantity);
     }
 }

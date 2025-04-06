@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PropertyResourceBundle;
@@ -18,7 +19,7 @@ public class RequestController {
     public ResponseEntity<String> sortByReturnRate(@RequestBody List<Stock> stocks) {
         List<StockWithPrice> priceAdded = new ArrayList<>();
         for (Stock stock : stocks) {
-            priceAdded.add(new StockWithPrice(stock, 100.00));
+            priceAdded.add(new StockWithPrice(stock, new BigDecimal(100.00)));
         }
 
         for (StockWithPrice stock : priceAdded) {

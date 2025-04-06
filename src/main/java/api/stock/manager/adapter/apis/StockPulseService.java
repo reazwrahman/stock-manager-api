@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 public class StockPulseService implements APIHandler{
+
+    private String m_baseURL = "https://yahoo-finance127.p.rapidapi.com/multi-quote";
+
     @Override
     public void prepareRequestBody() {
 
@@ -22,7 +25,7 @@ public class StockPulseService implements APIHandler{
 
     @Override
     public BigDecimal getPrice(String ticker) {
-        return null;
+        return new BigDecimal("300.12");
     }
 
     @Override
@@ -32,6 +35,7 @@ public class StockPulseService implements APIHandler{
 
     @Override
     public String getDescription() {
-        return null;
+        return "This is an adapter for calling StockPulse API for stock price, base URL: " + m_baseURL;
+
     }
 }

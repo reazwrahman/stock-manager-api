@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class YFinanceService implements APIHandler{
+    private String m_baseURL = "https://yahoo-finance166.p.rapidapi.com";
 
     @Override
     public void prepareRequestBody() {
@@ -23,7 +24,7 @@ public class YFinanceService implements APIHandler{
 
     @Override
     public BigDecimal getPrice(String ticker) {
-        return null;
+        return new BigDecimal(200);
     }
 
     @Override
@@ -33,6 +34,7 @@ public class YFinanceService implements APIHandler{
 
     @Override
     public String getDescription() {
-        return null;
+        return "This is an adapter for calling YFinance API for stock price, base URL: " + m_baseURL;
+
     }
 }
