@@ -1,18 +1,19 @@
-package api.stock.manager.decorator;
+package api.stock.manager.stock;
+
+import lombok.Data;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
-public class PriceDecorator extends AbstractDecorator {
-
+@Data
+public class StockWithPrice extends Stock{
     public BigDecimal price;
     public BigDecimal totalGain;
     public BigDecimal gain;
     public BigDecimal totalValue;
     public BigDecimal returnRate;
 
-    public PriceDecorator(Stock baseStock, Double price) {
-        super(baseStock);
+    public StockWithPrice(Stock baseStock, Double price) {
+        super(baseStock.ticker, baseStock.quantity, baseStock.totalCost);
         this.price = BigDecimal.valueOf(price);
         calculateGains();
     }

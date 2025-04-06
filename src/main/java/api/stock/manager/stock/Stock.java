@@ -1,4 +1,4 @@
-package api.stock.manager.decorator;
+package api.stock.manager.stock;
 
 import lombok.Data;
 
@@ -10,6 +10,7 @@ public class Stock {
     protected Double cost;
 
 
+    public Stock(){}
     public Stock(String ticker, Double quantity, Double totalCost) {
         this.ticker = ticker;
         this.quantity = quantity;
