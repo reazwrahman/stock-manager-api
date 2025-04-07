@@ -15,7 +15,9 @@ public class SimpleCache implements CacheInterface {
 
     @Override
     public void removeData(CachableData data) {
-        m_cache.remove(data.ticker);
+        if (m_cache.containsKey(data.getTicker())) {
+            m_cache.remove(data.ticker);
+        }
     }
 
     @Override

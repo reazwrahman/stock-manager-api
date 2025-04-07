@@ -17,11 +17,11 @@ public class CachingStrategy implements PriceRetrievalStrategy {
 
     private PriceHandler m_priceHandler;
     private final CacheInterface m_cache;
-    private final Long m_expiration;
+    private final Integer m_expiration; // in seconds
 
-    public CachingStrategy(CacheInterface cache, Long expirationTime) {
+    public CachingStrategy(CacheInterface cache, Integer seconds) {
         m_cache = cache;
-        m_expiration = expirationTime;
+        m_expiration = seconds;
     }
 
     @Override
@@ -66,9 +66,11 @@ public class CachingStrategy implements PriceRetrievalStrategy {
         // if we found all tickers, return the result.
         // if we are missing even just 1, its more efficient to fetch the data for the whole batch
         if (result.size() == tickers.size()) {
+            System.out.println("CachingStrategy::getPrice(batch) Returning result from Cache");
             return result;
         }
 
+        System.out.println("CachingStrategy::getPrice(batch) cache miss, calling price handler");
         result = m_priceHandler.getPrice(tickers);
         m_cache.addData(result);
         return result;
@@ -77,7 +79,7 @@ public class CachingStrategy implements PriceRetrievalStrategy {
     private boolean checkIfWithinExpiration(Instant instant) {
         Instant now = Instant.now();
         Duration duration = Duration.between(instant, now);
-        return Math.abs(duration.toMinutes()) <= m_expiration;
+        return Math.abs(duration.toSeconds()) <= m_expiration;
 
     }
 }

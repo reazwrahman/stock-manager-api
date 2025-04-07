@@ -12,7 +12,7 @@ public class AfterHourStrategy implements PriceRetrievalStrategy {
 
     @Override
     public String getDescription() {
-        return "This is the AfterHourStrategy, that will only invoke downstream API if the call is made during" +
+        return "This is the AfterHourStrategy, that will only invoke downstream API if the call is made during " +
                 "business hour, otherwise will resort to in-memory cache";
     }
 
