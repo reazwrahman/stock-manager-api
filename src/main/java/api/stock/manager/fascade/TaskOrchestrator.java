@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * - Receive stock list from request controller
  * - Get the available ones from cache
  * - For the remaining ones, split into batches
- *   - Call concurrency manager to get results
+ *   - Call concurrency manager to call downstream API
  * - Use the result to build a list of enriched stocks
  * - sort the stocks
  * - Create a response object
@@ -28,14 +28,25 @@ public class TaskOrchestrator {
     // TODO: move these to a config file
     // TODO: make object creations more dynamic based on configs
     private final Integer m_batchSize = 5; // number of stocks per API call
-    private final Integer m_cacheTTL = 300; //seconds
+    private final Integer m_cacheTTL = 180; //seconds
     private final CacheInterface m_cache = new SimpleCache();
     private final CachingStrategy m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
     private final CacheHelper m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
     private final PriceHandler m_adapter = new YahooWebAdapter();
     private final ConcurrencyManager m_concurrencyManager = new ConcurrencyManager(m_cachingStrategy, m_adapter);
 
-    public List<StockWithPrice> orchestrate(List<Stock> stocks) {
+    private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
+
+    public TaskOrchestrator() {
+        initializeComparators();
+    }
+
+    public void initializeComparators(){
+        m_comparatorMap.put("/sort-by-return-rate", Comparator.comparing(StockWithPrice::getReturnRate).reversed());
+        m_comparatorMap.put("/sort-by-total-gain", Comparator.comparing(StockWithPrice::getTotalGain).reversed());
+    }
+
+    public List<StockWithPrice> orchestrate(List<Stock> stocks, String sortingStrategy) {
         List<String> tickers = stocks.stream()
                 .map(Stock::getTicker)
                 .collect(Collectors.toList());
@@ -49,8 +60,7 @@ public class TaskOrchestrator {
         fullResult.putAll(remainingResult);
 
         List<StockWithPrice> stocksWithPrice = aggregateStocksWithPrice(stocks, fullResult);
-        Collections.sort(stocksWithPrice, Comparator.comparing(StockWithPrice::getReturnRate).reversed());
-
+        Collections.sort(stocksWithPrice, generateComparator(sortingStrategy));
         return stocksWithPrice;
     }
 
@@ -77,6 +87,15 @@ public class TaskOrchestrator {
             enrichedStocks.add(new StockWithPrice(stock, result.get(stock.getTicker())));
         }
         return enrichedStocks;
+    }
+
+    private Comparator<StockWithPrice> generateComparator(String path){
+        if (m_comparatorMap.containsKey(path)) {
+            return m_comparatorMap.get(path);
+        }
+        else {
+            throw new RuntimeException("TaskOrchestrator::generateComparator invalid path");
+        }
     }
 }
 

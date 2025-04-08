@@ -19,12 +19,19 @@ import java.util.List;
 @RestController
 public class RequestController {
 
+    // TODO: add a logger object, convert prints to logs in the codebase
+
     TaskOrchestrator orchestrator = new TaskOrchestrator();
 
     @PostMapping("/sort-by-return-rate")
     public ResponseEntity<List<StockWithPrice>> sortByReturnRate(@RequestBody List<Stock> stocks) {
 
         // example of fascade pattern: orchestrator hides all the complexity
-        return ResponseEntity.ok(orchestrator.orchestrate(stocks));
+        return ResponseEntity.ok(orchestrator.orchestrate(stocks, "/sort-by-return-rate"));
+    }
+
+    @PostMapping("/sort-by-total-gain")
+    public ResponseEntity<List<StockWithPrice>> sortByTotalGain(@RequestBody List<Stock> stocks) {
+        return ResponseEntity.ok(orchestrator.orchestrate(stocks, "/sort-by-total-gain"));
     }
 }
