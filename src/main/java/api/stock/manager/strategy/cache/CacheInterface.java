@@ -6,7 +6,7 @@ import java.util.Map;
 public interface CacheInterface {
     void addData(CachableData data);
 
-    void removeData(CachableData data);
+    void removeData(String ticker);
 
     CachableData getData(String ticker);
 

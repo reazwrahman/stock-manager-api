@@ -22,23 +22,23 @@ public class CacheHelper {
         m_expiration = ttlSeconds;
     }
 
-    Map<String, BigDecimal> buildPartialResult(ArrayList<Stock> stocks){
+    Map<String, BigDecimal> buildPartialResult(List<String> stocks){
         Map<String, BigDecimal> result = new HashMap<>();
-        List<Stock> remainder = new ArrayList<>(stocks);
+        List<String> remainder = new ArrayList<>(stocks);
         remainder.removeAll(generateMissingList(stocks));
-        for (Stock stock: remainder) {
-            result.put(stock.getTicker(), m_cache.getData(stock.getTicker()).getPrice());
+        for (String ticker: remainder) {
+            result.put(ticker, m_cache.getData(ticker).getPrice());
         }
         return result;
     }
 
-    List<Stock> generateMissingList(List<Stock> stocks){
-        List<Stock> missing = new ArrayList<>();
-        for (Stock stock: stocks) {
-            CachableData data = m_cache.getData(stock.getTicker());
+    List<String> generateMissingList(List<String> tickers){
+        List<String > missing = new ArrayList<>();
+        for (String ticker: tickers) {
+            CachableData data = m_cache.getData(ticker);
             if (data == null || checkIfExpired(data.getLastUpdated(), m_expiration)) {
-                m_cache.removeData(data);
-                missing.add(stock);
+                m_cache.removeData(ticker);
+                missing.add(ticker);
             }
         }
         return missing;
