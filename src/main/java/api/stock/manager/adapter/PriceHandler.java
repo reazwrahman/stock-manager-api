@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface PriceHandler {
     BigDecimal getPrice(String ticker) throws IOException;
+
     Map<String, BigDecimal> getPrice(List<String> tickers) throws IOException;
+
     String getDescription();
 }

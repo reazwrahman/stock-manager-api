@@ -33,7 +33,7 @@ public class SimpleCache implements CacheInterface {
 
     @Override
     public void addData(Map<String, BigDecimal> batch) {
-        for (String key: batch.keySet()) {
+        for (String key : batch.keySet()) {
             m_cache.put(key, new CachableData(key, batch.get(key), Instant.now()));
         }
     }

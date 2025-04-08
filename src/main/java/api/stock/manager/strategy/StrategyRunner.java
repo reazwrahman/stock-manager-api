@@ -19,7 +19,7 @@ public class StrategyRunner {
         testCachingStrategy();
     }
 
-    public static void testStrategyPattern(PriceRetrievalStrategy strategy, PriceHandler adapter){
+    public static void testStrategyPattern(PriceRetrievalStrategy strategy, PriceHandler adapter) {
         strategy.setAdapter(adapter);
         System.out.println(strategy.getDescription());
     }

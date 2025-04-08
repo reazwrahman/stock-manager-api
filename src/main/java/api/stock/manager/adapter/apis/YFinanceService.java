@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class YFinanceService implements APIHandler{
+public class YFinanceService implements APIHandler {
     private String m_baseURL = "https://yahoo-finance166.p.rapidapi.com";
 
     @Override

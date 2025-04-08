@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class YahooWebAdapter implements PriceHandler{
+public class YahooWebAdapter implements PriceHandler {
 
     private String m_baseURL = "https://finance.yahoo.com/quotes/";
 
@@ -59,14 +59,14 @@ public class YahooWebAdapter implements PriceHandler{
         return mappedData;
     }
 
-    private String buildURL(String ticker){
+    private String buildURL(String ticker) {
         return m_baseURL + ticker;
 
     }
 
-    public String buildURL(List<String> tickers){
+    public String buildURL(List<String> tickers) {
         StringBuilder extension = new StringBuilder();
-        for (int i = 0; i < tickers.size() -1 ; i++) {
+        for (int i = 0; i < tickers.size() - 1; i++) {
             extension.append(tickers.get(i));
             extension.append(",");
         }

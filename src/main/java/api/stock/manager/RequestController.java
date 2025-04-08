@@ -1,9 +1,12 @@
 package api.stock.manager;
 
+import api.stock.manager.fascade.TaskOrchestrator;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,24 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PropertyResourceBundle;
+
 
 @RestController
 public class RequestController {
+
+    TaskOrchestrator orchestrator = new TaskOrchestrator();
+
     @PostMapping("/sort-by-return-rate")
-    public ResponseEntity<String> sortByReturnRate(@RequestBody List<Stock> stocks) {
-        List<StockWithPrice> priceAdded = new ArrayList<>();
-        for (Stock stock : stocks) {
-            priceAdded.add(new StockWithPrice(stock, new BigDecimal(100.00)));
-        }
+    public ResponseEntity<List<StockWithPrice>> sortByReturnRate(@RequestBody List<Stock> stocks) {
 
-        for (StockWithPrice stock : priceAdded) {
-            System.out.println("Received stock: " + stock.getTicker() + " @ " +
-                    stock.getQuantity() + " @ $" + stock.getPrice());
-
-        }
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body("Stocks received successfully.");
+        // example of fascade pattern: orchestrator hides all the complexity
+        return ResponseEntity.ok(orchestrator.orchestrate(stocks));
     }
 }

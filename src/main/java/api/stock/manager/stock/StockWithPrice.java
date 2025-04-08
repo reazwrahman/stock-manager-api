@@ -1,12 +1,13 @@
 package api.stock.manager.stock;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Data
-public class StockWithPrice extends Stock{
+public class StockWithPrice extends Stock implements Comparable<StockWithPrice>{
     public BigDecimal price;
     public BigDecimal totalGain;
     public BigDecimal gain;
@@ -33,4 +34,8 @@ public class StockWithPrice extends Stock{
 
     }
 
+    @Override
+    public int compareTo(@NotNull StockWithPrice other) {
+        return this.returnRate.compareTo(other.returnRate);
+    }
 }

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class StockPulseService implements APIHandler{
+public class StockPulseService implements APIHandler {
 
     private String m_baseURL = "https://yahoo-finance127.p.rapidapi.com/multi-quote";
 

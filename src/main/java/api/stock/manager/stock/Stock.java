@@ -3,6 +3,7 @@ package api.stock.manager.stock;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Data
 public class Stock {
@@ -12,15 +13,17 @@ public class Stock {
     protected BigDecimal cost;
 
 
-    public Stock(){}
+    public Stock() {
+    }
+
     public Stock(String ticker, BigDecimal quantity, BigDecimal totalCost) {
         this.ticker = ticker;
         this.quantity = quantity;
-        this.totalCost =  totalCost;
+        this.totalCost = totalCost;
         findCostPerStock();
     }
 
-    protected void findCostPerStock(){
-        this.cost = (this.totalCost).divide(this.quantity);
+    protected void findCostPerStock() {
+        this.cost = (this.totalCost).divide(this.quantity, 2, RoundingMode.HALF_UP);
     }
 }

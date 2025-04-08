@@ -1,8 +1,7 @@
-package api.stock.manager.fascade.concurrency;
+package api.stock.manager.fascade;
 
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.CachingStrategy;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -20,13 +19,13 @@ public class ConcurrencyManager {
     private CachingStrategy m_cachingStrategy;
     private PriceHandler m_adapter;
 
-    public ConcurrencyManager(CachingStrategy cachingStrategy, PriceHandler adapter){
+    public ConcurrencyManager(CachingStrategy cachingStrategy, PriceHandler adapter) {
         m_cachingStrategy = cachingStrategy;
         m_adapter = adapter;
         m_cachingStrategy.setAdapter(adapter);
     }
 
-    Map<String, BigDecimal> getPriceMultiStock(List<List<String>> stocks) {
+    public Map<String, BigDecimal> getPriceMultiStock(List<List<String>> stocks) {
         ExecutorService executor = Executors.newFixedThreadPool(stocks.size());
 
         // Store all futures
@@ -49,18 +48,16 @@ public class ConcurrencyManager {
                 .map(CompletableFuture::join) // .join doesn't throw checked exceptions
                 .collect(Collectors.toList());
 
-        System.out.println(results);
-
         executor.shutdown();
 
         return createFlatMap(results);
 
     }
 
-    private Map<String, BigDecimal> createFlatMap(List<Map<String, BigDecimal>> results){
+    private Map<String, BigDecimal> createFlatMap(List<Map<String, BigDecimal>> results) {
         Map<String, BigDecimal> output = new HashMap<>();
-        for (Map<String, BigDecimal> map: results) {
-            for (String key: map.keySet()) {
+        for (Map<String, BigDecimal> map : results) {
+            for (String key : map.keySet()) {
                 output.put(key, map.get(key));
             }
         }

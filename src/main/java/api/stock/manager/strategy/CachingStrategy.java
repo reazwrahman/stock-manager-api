@@ -8,16 +8,15 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CachingStrategy implements PriceRetrievalStrategy {
 
-    private PriceHandler m_priceHandler;
     private final CacheInterface m_cache;
     private final Integer m_expiration; // in seconds
+    private PriceHandler m_priceHandler;
 
     public CachingStrategy(CacheInterface cache, Integer seconds) {
         m_cache = cache;
@@ -54,7 +53,7 @@ public class CachingStrategy implements PriceRetrievalStrategy {
     public Map<String, BigDecimal> getPrice(List<String> tickers) throws IOException {
         Map<String, BigDecimal> result = new HashMap<>();
 
-        for (String ticker: tickers) {
+        for (String ticker : tickers) {
             CachableData data = m_cache.getData(ticker);
             if (data != null && checkIfWithinExpiration(data.getLastUpdated())) {
                 result.put(ticker, data.getPrice());
