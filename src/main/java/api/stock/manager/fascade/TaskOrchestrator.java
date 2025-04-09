@@ -32,11 +32,8 @@ public class TaskOrchestrator {
 
     // TODO: make object creations more dynamic with Spring
 
-    @Value("${stock.batch.size}")
-    private Integer m_batchSize; //= 5; // number of stocks per API call
-
-    @Value("${cache.ttl}")
-    private Integer m_cacheTTL;
+    private Integer m_batchSize = 5; // number of stocks per API call
+    private Integer m_cacheTTL = 180;
 
     private final CacheInterface m_cache = new SimpleCache();
     private final CachingStrategy m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
@@ -48,7 +45,6 @@ public class TaskOrchestrator {
 
     public TaskOrchestrator() {
         initializeComparators();
-        System.out.println("batch_size" + m_batchSize);
     }
 
     public void initializeComparators(){
