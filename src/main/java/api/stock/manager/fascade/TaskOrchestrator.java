@@ -7,7 +7,10 @@ import api.stock.manager.stock.StockWithPrice;
 import api.stock.manager.strategy.CachingStrategy;
 import api.stock.manager.strategy.cache.CacheInterface;
 import api.stock.manager.strategy.cache.SimpleCache;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -23,12 +26,18 @@ import java.util.stream.Collectors;
  * - Create a response object
  * - Return the response model back to the controller
  */
+
+@Service
 public class TaskOrchestrator {
 
-    // TODO: move these to a config file
-    // TODO: make object creations more dynamic based on configs
-    private final Integer m_batchSize = 5; // number of stocks per API call
-    private final Integer m_cacheTTL = 180; //seconds
+    // TODO: make object creations more dynamic with Spring
+
+    @Value("${stock.batch.size}")
+    private Integer m_batchSize; //= 5; // number of stocks per API call
+
+    @Value("${cache.ttl}")
+    private Integer m_cacheTTL;
+
     private final CacheInterface m_cache = new SimpleCache();
     private final CachingStrategy m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
     private final CacheHelper m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
@@ -39,6 +48,7 @@ public class TaskOrchestrator {
 
     public TaskOrchestrator() {
         initializeComparators();
+        System.out.println("batch_size" + m_batchSize);
     }
 
     public void initializeComparators(){

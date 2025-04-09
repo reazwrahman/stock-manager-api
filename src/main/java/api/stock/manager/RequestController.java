@@ -3,6 +3,7 @@ package api.stock.manager;
 import api.stock.manager.fascade.TaskOrchestrator;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,8 @@ public class RequestController {
 
     // TODO: add a logger object, convert prints to logs in the codebase
 
-    TaskOrchestrator orchestrator = new TaskOrchestrator();
+    @Autowired
+    TaskOrchestrator orchestrator;
 
     @PostMapping("/sort-by-return-rate")
     public ResponseEntity<List<StockWithPrice>> sortByReturnRate(@RequestBody List<Stock> stocks) {
