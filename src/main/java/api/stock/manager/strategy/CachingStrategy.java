@@ -3,6 +3,7 @@ package api.stock.manager.strategy;
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.cache.CachableData;
 import api.stock.manager.strategy.cache.CacheInterface;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;

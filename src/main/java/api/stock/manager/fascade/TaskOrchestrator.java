@@ -1,15 +1,15 @@
 package api.stock.manager.fascade;
 
 import api.stock.manager.adapter.PriceHandler;
-import api.stock.manager.adapter.YahooWebAdapter;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
 import api.stock.manager.strategy.CachingStrategy;
+import api.stock.manager.strategy.PriceRetrievalStrategy;
 import api.stock.manager.strategy.cache.CacheInterface;
-import api.stock.manager.strategy.cache.SimpleCache;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * - Receive stock list from request controller
  * - Get the available ones from cache
  * - For the remaining ones, split into batches
- *   - Call concurrency manager to call downstream API
+ * - Call concurrency manager to call downstream API
  * - Use the result to build a list of enriched stocks
  * - sort the stocks
  * - Create a response object
@@ -30,24 +30,48 @@ import java.util.stream.Collectors;
 @Service
 public class TaskOrchestrator {
 
-    // TODO: make object creations more dynamic with Spring
+    @Value("${stock.batch.size}")
+    private Integer m_batchSize; // number of stocks per API call
 
-    private Integer m_batchSize = 5; // number of stocks per API call
-    private Integer m_cacheTTL = 180;
+    @Value("${cache.ttl}")
+    private Integer m_cacheTTL;
 
-    private final CacheInterface m_cache = new SimpleCache();
-    private final CachingStrategy m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
-    private final CacheHelper m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
-    private final PriceHandler m_adapter = new YahooWebAdapter();
-    private final ConcurrencyManager m_concurrencyManager = new ConcurrencyManager(m_cachingStrategy, m_adapter);
+
+    @Autowired
+    @Qualifier("yahooWebAdapter")
+    private PriceHandler m_adapter;
+
+    // post constuct helpers
+    private CacheInterface m_cache;
+    private PriceRetrievalStrategy m_cachingStrategy;
+    private ConcurrencyManager m_concurrencyManager;
+    private CacheHelper m_cacheHelper;
+
+    // Spring managed  factories
+    private final Map<String, CacheInterface> m_cacheMap;
 
     private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
 
-    public TaskOrchestrator() {
+    @Autowired
+    public TaskOrchestrator(Map<String, CacheInterface> cacheMap,
+                            @Value("${cache.ttl}") Integer cacheTTL) {
+        m_cacheMap = cacheMap;
+        m_cacheTTL = cacheTTL;
+
         initializeComparators();
     }
 
-    public void initializeComparators(){
+    @PostConstruct
+    public void init() {
+        m_cache = m_cacheMap.get("simpleCache");
+        m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
+        m_cachingStrategy.setAdapter(m_adapter);
+        m_concurrencyManager = new ConcurrencyManager(m_cachingStrategy, m_adapter);
+        m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
+    }
+
+
+    public void initializeComparators() {
         m_comparatorMap.put("/sort-by-return-rate", Comparator.comparing(StockWithPrice::getReturnRate).reversed());
         m_comparatorMap.put("/sort-by-total-gain", Comparator.comparing(StockWithPrice::getTotalGain).reversed());
     }
@@ -87,19 +111,18 @@ public class TaskOrchestrator {
         return batches;
     }
 
-    private List<StockWithPrice> aggregateStocksWithPrice(List<Stock> stocks, Map<String, BigDecimal> result){
+    private List<StockWithPrice> aggregateStocksWithPrice(List<Stock> stocks, Map<String, BigDecimal> result) {
         List<StockWithPrice> enrichedStocks = new ArrayList<>();
-        for (Stock stock: stocks) {
+        for (Stock stock : stocks) {
             enrichedStocks.add(new StockWithPrice(stock, result.get(stock.getTicker())));
         }
         return enrichedStocks;
     }
 
-    private Comparator<StockWithPrice> generateComparator(String path){
+    private Comparator<StockWithPrice> generateComparator(String path) {
         if (m_comparatorMap.containsKey(path)) {
             return m_comparatorMap.get(path);
-        }
-        else {
+        } else {
             throw new RuntimeException("TaskOrchestrator::generateComparator invalid path");
         }
     }

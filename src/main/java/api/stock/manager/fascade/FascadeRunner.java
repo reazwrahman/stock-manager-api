@@ -38,7 +38,7 @@ public class FascadeRunner {
         System.out.println();
     }
 
-    public static void testConcurrencyManager(){
+    public static void testConcurrencyManager() {
         System.out.println("----- Testing concurrency Manager ---- ");
 
         List<String> stockTickers = List.of("AAPL", "GOOGL", "MSFT", "AMZN", "TSLA", "BA", "NOC",

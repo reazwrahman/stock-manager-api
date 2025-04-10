@@ -2,6 +2,7 @@ package api.stock.manager.fascade;
 
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.CachingStrategy;
+import api.stock.manager.strategy.PriceRetrievalStrategy;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
 
 public class ConcurrencyManager {
 
-    private CachingStrategy m_cachingStrategy;
+    private PriceRetrievalStrategy m_cachingStrategy;
     private PriceHandler m_adapter;
 
-    public ConcurrencyManager(CachingStrategy cachingStrategy, PriceHandler adapter) {
+    public ConcurrencyManager(PriceRetrievalStrategy cachingStrategy, PriceHandler adapter) {
         m_cachingStrategy = cachingStrategy;
         m_adapter = adapter;
         m_cachingStrategy.setAdapter(adapter);

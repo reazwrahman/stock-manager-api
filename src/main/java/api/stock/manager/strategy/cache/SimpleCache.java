@@ -1,10 +1,13 @@
 package api.stock.manager.strategy.cache;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component("simpleCache")
 public class SimpleCache implements CacheInterface {
     private final Map<String, CachableData> m_cache = new ConcurrentHashMap<>();
 
