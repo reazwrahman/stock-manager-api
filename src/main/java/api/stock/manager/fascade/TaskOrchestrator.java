@@ -1,14 +1,8 @@
 package api.stock.manager.fascade;
 
-import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
-import api.stock.manager.strategy.CacheStrategyParameters;
-import api.stock.manager.strategy.PriceRetrievalStrategy;
-import api.stock.manager.strategy.cache.CacheInterface;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,10 +24,9 @@ import java.util.stream.Collectors;
 public class TaskOrchestrator {
 
     private final Configs m_configs;
+    private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
     private ConcurrencyManager m_concurrencyManager;
     private CacheHelper m_cacheHelper;
-
-    private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
 
     @Autowired
     public TaskOrchestrator(Configs configs) {

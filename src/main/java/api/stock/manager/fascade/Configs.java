@@ -22,18 +22,16 @@ public class Configs {
     Integer m_batchSize; // number of stocks per API call
     @Value("${cache.ttl}")
     Integer m_cacheTTL;
-
+    // task delegators
+    PriceHandler m_adapter;
+    CacheInterface m_cache;
+    PriceRetrievalStrategy m_cachingStrategy;
     @Value("${cache.type}")
     private String m_cacheType;
     @Value("${cache.strategy}")
     private String m_cacheStrategyType;
     @Value("${adapter.type}")
     private String m_adapterType;
-
-    // task delegators
-    PriceHandler m_adapter;
-    CacheInterface m_cache;
-    PriceRetrievalStrategy m_cachingStrategy;
 
     @Autowired
     public Configs(Map<String, CacheInterface> cacheMap,
