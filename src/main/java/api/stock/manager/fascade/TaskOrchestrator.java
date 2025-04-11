@@ -1,5 +1,6 @@
 package api.stock.manager.fascade;
 
+import api.stock.manager.stock.ResponseModel;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class TaskOrchestrator {
         m_comparatorMap.put("/sort-by-total-gain", Comparator.comparing(StockWithPrice::getTotalGain).reversed());
     }
 
-    public List<StockWithPrice> orchestrate(List<Stock> stocks, String sortingStrategy) {
+    public ResponseModel orchestrate(List<Stock> stocks, String sortingStrategy) {
         List<String> tickers = stocks.stream()
                 .map(Stock::getTicker)
                 .collect(Collectors.toList());
@@ -56,7 +57,7 @@ public class TaskOrchestrator {
 
         List<StockWithPrice> stocksWithPrice = aggregateStocksWithPrice(stocks, fullResult);
         Collections.sort(stocksWithPrice, generateComparator(sortingStrategy));
-        return stocksWithPrice;
+        return new ResponseModel(stocksWithPrice);
     }
 
     private List<List<String>> splitIntoBatches(List<String> tickers) {
