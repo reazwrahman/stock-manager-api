@@ -23,7 +23,6 @@ public class ConcurrencyManager {
     public ConcurrencyManager(PriceRetrievalStrategy cachingStrategy, PriceHandler adapter) {
         m_cachingStrategy = cachingStrategy;
         m_adapter = adapter;
-        m_cachingStrategy.setAdapter(adapter);
     }
 
     public Map<String, BigDecimal> getPriceMultiStock(List<List<String>> stocks) {

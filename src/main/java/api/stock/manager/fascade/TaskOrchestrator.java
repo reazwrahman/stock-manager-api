@@ -3,6 +3,7 @@ package api.stock.manager.fascade;
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
+import api.stock.manager.strategy.CacheStrategyParameters;
 import api.stock.manager.strategy.CachingStrategy;
 import api.stock.manager.strategy.PriceRetrievalStrategy;
 import api.stock.manager.strategy.cache.CacheInterface;
@@ -36,36 +37,46 @@ public class TaskOrchestrator {
     @Value("${cache.ttl}")
     private Integer m_cacheTTL;
 
+    @Value("${cache.type}")
+    private String m_cacheType;
 
-    @Autowired
-    @Qualifier("yahooWebAdapter")
+    @Value("${cache.strategy}")
+    private String m_cacheStrategyType;
+
+    @Value("${adapter.type}")
+    private String m_adapterType;
+
+    // task delegators
     private PriceHandler m_adapter;
-
-    // post constuct helpers
     private CacheInterface m_cache;
     private PriceRetrievalStrategy m_cachingStrategy;
     private ConcurrencyManager m_concurrencyManager;
     private CacheHelper m_cacheHelper;
 
-    // Spring managed  factories
-    private final Map<String, CacheInterface> m_cacheMap;
-
     private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
+
+    // Spring managed factories
+    private final Map<String, CacheInterface> m_cacheMap;
+    private final Map<String, PriceRetrievalStrategy> m_cacheStrategyMap;
+    private final Map<String, PriceHandler> m_adapterMap;
 
     @Autowired
     public TaskOrchestrator(Map<String, CacheInterface> cacheMap,
-                            @Value("${cache.ttl}") Integer cacheTTL) {
+                            Map<String, PriceRetrievalStrategy> cacheStrategyMap,
+                            Map<String, PriceHandler> adapterMap) {
         m_cacheMap = cacheMap;
-        m_cacheTTL = cacheTTL;
+        m_cacheStrategyMap = cacheStrategyMap;
+        m_adapterMap = adapterMap;
 
         initializeComparators();
     }
 
     @PostConstruct
     public void init() {
-        m_cache = m_cacheMap.get("simpleCache");
-        m_cachingStrategy = new CachingStrategy(m_cache, m_cacheTTL);
-        m_cachingStrategy.setAdapter(m_adapter);
+        m_cache = m_cacheMap.get(m_cacheType);
+        m_adapter = m_adapterMap.get(m_adapterType);
+        m_cachingStrategy = m_cacheStrategyMap.get("cachingStrategy");
+        m_cachingStrategy.setParameters(new CacheStrategyParameters(m_adapter, m_cache, m_cacheTTL));
         m_concurrencyManager = new ConcurrencyManager(m_cachingStrategy, m_adapter);
         m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
     }
