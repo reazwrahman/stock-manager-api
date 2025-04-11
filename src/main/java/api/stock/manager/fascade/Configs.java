@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Dynamically generate the correct implementation of the interfaces
+ * based on user defined inputs in application.properties
+ */
 @Service
 public class Configs {
     // Spring managed factories

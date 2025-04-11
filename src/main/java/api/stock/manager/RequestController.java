@@ -23,7 +23,7 @@ public class RequestController {
     @PostMapping("/sort-by-return-rate")
     public ResponseEntity<List<StockWithPrice>> sortByReturnRate(@RequestBody List<Stock> stocks) {
 
-        // example of fascade pattern: orchestrator hides all the complexity
+        // example of facade pattern: orchestrator hides all the complexity
         return ResponseEntity.ok(orchestrator.orchestrate(stocks, "/sort-by-return-rate"));
     }
 
