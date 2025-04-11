@@ -1,7 +1,6 @@
 package api.stock.manager.stock;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

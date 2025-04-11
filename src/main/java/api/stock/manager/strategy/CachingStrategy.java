@@ -3,6 +3,7 @@ package api.stock.manager.strategy;
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.cache.CachableData;
 import api.stock.manager.strategy.cache.CacheInterface;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,16 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component("cachingStrategy")
 public class CachingStrategy implements PriceRetrievalStrategy {
 
-    private final CacheInterface m_cache;
-    private final Integer m_expiration; // in seconds
+    private CacheInterface m_cache;
+    private Integer m_expiration; // in seconds
     private PriceHandler m_priceHandler;
-
-    public CachingStrategy(CacheInterface cache, Integer seconds) {
-        m_cache = cache;
-        m_expiration = seconds;
-    }
 
     @Override
     public String getDescription() {
@@ -30,8 +27,15 @@ public class CachingStrategy implements PriceRetrievalStrategy {
     }
 
     @Override
-    public void setAdapter(PriceHandler adapter) {
-        m_priceHandler = adapter;
+    public void setParameters(CacheStrategyParameters parameters) {
+        m_cache = parameters.getCache();
+        m_expiration = parameters.getTtl();
+        m_priceHandler = parameters.getAdapter();
+    }
+
+    public void setCache(CacheInterface cache, Integer ttl) {
+        m_cache = cache;
+        m_expiration = ttl;
     }
 
     @Override

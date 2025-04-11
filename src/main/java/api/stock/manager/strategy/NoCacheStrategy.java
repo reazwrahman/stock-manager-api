@@ -1,12 +1,14 @@
 package api.stock.manager.strategy;
 
 import api.stock.manager.adapter.PriceHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+@Component("noCacheStrategy")
 public class NoCacheStrategy implements PriceRetrievalStrategy {
 
     private PriceHandler m_priceHandler;
@@ -18,9 +20,10 @@ public class NoCacheStrategy implements PriceRetrievalStrategy {
     }
 
     @Override
-    public void setAdapter(PriceHandler adapter) {
-        m_priceHandler = adapter;
+    public void setParameters(CacheStrategyParameters parameters) {
+        m_priceHandler = parameters.getAdapter();
     }
+
 
     @Override
     public BigDecimal getPrice(String ticker) throws IOException {
