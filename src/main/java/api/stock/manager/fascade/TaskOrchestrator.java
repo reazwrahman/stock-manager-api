@@ -4,12 +4,10 @@ import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
 import api.stock.manager.strategy.CacheStrategyParameters;
-import api.stock.manager.strategy.CachingStrategy;
 import api.stock.manager.strategy.PriceRetrievalStrategy;
 import api.stock.manager.strategy.cache.CacheInterface;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,56 +29,19 @@ import java.util.stream.Collectors;
 @Service
 public class TaskOrchestrator {
 
-    @Value("${stock.batch.size}")
-    private Integer m_batchSize; // number of stocks per API call
-
-    @Value("${cache.ttl}")
-    private Integer m_cacheTTL;
-
-    @Value("${cache.type}")
-    private String m_cacheType;
-
-    @Value("${cache.strategy}")
-    private String m_cacheStrategyType;
-
-    @Value("${adapter.type}")
-    private String m_adapterType;
-
-    // task delegators
-    private PriceHandler m_adapter;
-    private CacheInterface m_cache;
-    private PriceRetrievalStrategy m_cachingStrategy;
+    private final Configs m_configs;
     private ConcurrencyManager m_concurrencyManager;
     private CacheHelper m_cacheHelper;
 
     private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
 
-    // Spring managed factories
-    private final Map<String, CacheInterface> m_cacheMap;
-    private final Map<String, PriceRetrievalStrategy> m_cacheStrategyMap;
-    private final Map<String, PriceHandler> m_adapterMap;
-
     @Autowired
-    public TaskOrchestrator(Map<String, CacheInterface> cacheMap,
-                            Map<String, PriceRetrievalStrategy> cacheStrategyMap,
-                            Map<String, PriceHandler> adapterMap) {
-        m_cacheMap = cacheMap;
-        m_cacheStrategyMap = cacheStrategyMap;
-        m_adapterMap = adapterMap;
-
+    public TaskOrchestrator(Configs configs) {
+        m_configs = configs;
+        m_concurrencyManager = new ConcurrencyManager(m_configs.m_cachingStrategy, m_configs.m_adapter);
+        m_cacheHelper = new CacheHelper(m_configs.m_cache, m_configs.m_cacheTTL);
         initializeComparators();
     }
-
-    @PostConstruct
-    public void init() {
-        m_cache = m_cacheMap.get(m_cacheType);
-        m_adapter = m_adapterMap.get(m_adapterType);
-        m_cachingStrategy = m_cacheStrategyMap.get("cachingStrategy");
-        m_cachingStrategy.setParameters(new CacheStrategyParameters(m_adapter, m_cache, m_cacheTTL));
-        m_concurrencyManager = new ConcurrencyManager(m_cachingStrategy, m_adapter);
-        m_cacheHelper = new CacheHelper(m_cache, m_cacheTTL);
-    }
-
 
     public void initializeComparators() {
         m_comparatorMap.put("/sort-by-return-rate", Comparator.comparing(StockWithPrice::getReturnRate).reversed());
@@ -110,7 +71,7 @@ public class TaskOrchestrator {
         int counter = 0;
         List<String> temp = new ArrayList<>();
         for (String ticker : tickers) {
-            if (counter >= m_batchSize) {
+            if (counter >= m_configs.m_batchSize) {
                 batches.add(temp);
                 temp = new ArrayList<>();
                 counter = 0;

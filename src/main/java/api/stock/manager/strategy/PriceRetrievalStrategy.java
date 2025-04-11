@@ -1,7 +1,5 @@
 package api.stock.manager.strategy;
 
-import api.stock.manager.adapter.PriceHandler;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;

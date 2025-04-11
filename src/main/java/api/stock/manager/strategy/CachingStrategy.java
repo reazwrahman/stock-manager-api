@@ -3,7 +3,6 @@ package api.stock.manager.strategy;
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.cache.CachableData;
 import api.stock.manager.strategy.cache.CacheInterface;
-import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class CachingStrategy implements PriceRetrievalStrategy {
         m_priceHandler = parameters.getAdapter();
     }
 
-    public void setCache(CacheInterface cache, Integer ttl){
+    public void setCache(CacheInterface cache, Integer ttl) {
         m_cache = cache;
         m_expiration = ttl;
     }

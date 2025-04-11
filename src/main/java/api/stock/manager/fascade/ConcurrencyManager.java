@@ -1,7 +1,6 @@
 package api.stock.manager.fascade;
 
 import api.stock.manager.adapter.PriceHandler;
-import api.stock.manager.strategy.CachingStrategy;
 import api.stock.manager.strategy.PriceRetrievalStrategy;
 
 import java.io.IOException;
