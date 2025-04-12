@@ -1,4 +1,4 @@
-package api.stock.manager.fascade;
+package api.stock.manager.facade;
 
 import api.stock.manager.strategy.cache.CachableData;
 import api.stock.manager.strategy.cache.CacheInterface;
