@@ -1,8 +1,11 @@
 package api.stock.manager.fascade;
 
+import api.stock.manager.RequestController;
 import api.stock.manager.stock.ResponseModel;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskOrchestrator {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     private final Configs m_configs;
     private final Map<String, Comparator<StockWithPrice>> m_comparatorMap = new HashMap<>();
@@ -48,15 +53,15 @@ public class TaskOrchestrator {
                 .collect(Collectors.toList());
 
         Map<String, BigDecimal> partialResult = m_cacheHelper.buildPartialResult(tickers);
-        System.out.println("Partial Result from Cache: " + partialResult);
+        logger.info("TaskOrchestrator::orchestrate Partial Result from Cache: " + partialResult);
 
         List<List<String>> targetBatches = splitIntoBatches(m_cacheHelper.generateMissingList(tickers));
         Map<String, BigDecimal> remainingResult = m_concurrencyManager.getPriceMultiStock(targetBatches);
-        System.out.println("Remaining Result from API: " + remainingResult);
+        logger.info("TaskOrchestrator::orchestrate Remaining Result from API: " + remainingResult);
 
         Map<String, BigDecimal> fullResult = new HashMap<>(partialResult);
         fullResult.putAll(remainingResult);
-        System.out.println("Complete Result: " + fullResult);
+        logger.info("TaskOrchestrator::orchestrate Complete Result: " + fullResult);
 
         List<StockWithPrice> stocksWithPrice = aggregateStocksWithPrice(stocks, fullResult);
         Collections.sort(stocksWithPrice, generateComparator(sortingStrategy));
