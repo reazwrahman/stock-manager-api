@@ -48,12 +48,15 @@ public class TaskOrchestrator {
                 .collect(Collectors.toList());
 
         Map<String, BigDecimal> partialResult = m_cacheHelper.buildPartialResult(tickers);
+        System.out.println("Partial Result from Cache: " + partialResult);
 
         List<List<String>> targetBatches = splitIntoBatches(m_cacheHelper.generateMissingList(tickers));
         Map<String, BigDecimal> remainingResult = m_concurrencyManager.getPriceMultiStock(targetBatches);
+        System.out.println("Remaining Result from API: " + remainingResult);
 
         Map<String, BigDecimal> fullResult = new HashMap<>(partialResult);
         fullResult.putAll(remainingResult);
+        System.out.println("Complete Result: " + fullResult);
 
         List<StockWithPrice> stocksWithPrice = aggregateStocksWithPrice(stocks, fullResult);
         Collections.sort(stocksWithPrice, generateComparator(sortingStrategy));
