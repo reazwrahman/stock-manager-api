@@ -11,6 +11,7 @@
 ## To run a container on public internet
 - build the docker image from root dir: `docker build -t stock-manager-api .` 
 - to run the container: `docker run -d -p <target_port>:8080 stock-manager-api` 
+- API is live on the public internet at: https://stock-manager.reaz-projects.uk/health
 
 ### Optional docker commands 
 - to verify docker daemon is running: `sudo docker ps`  
