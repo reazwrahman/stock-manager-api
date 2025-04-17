@@ -33,7 +33,7 @@ public class ConcurrencyManager {
         for (List<String> batch : stocks) {
             CompletableFuture<Map<String, BigDecimal>> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    return m_cachingStrategy.getPrice(batch); // simulate async task
+                    return m_cachingStrategy.getPrice(batch);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
