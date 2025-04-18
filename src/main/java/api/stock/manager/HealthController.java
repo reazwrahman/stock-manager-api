@@ -24,7 +24,7 @@ class HealthController {
         long usedPhysicalMemory = totalPhysicalMemory - osBean.getFreePhysicalMemorySize();
         double memoryUsagePercentage = ((double) usedPhysicalMemory / totalPhysicalMemory) * 100;
 
-        return String.format("System CPU Usage: %.2f%%, Used RAM: (%.2f%%)",
+        return String.format("System CPU Usage: %.2f%%, Used RAM: %.2f%%",
                 systemCpuLoad, memoryUsagePercentage);
     }
 
