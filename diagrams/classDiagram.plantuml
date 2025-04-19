@@ -1,0 +1,90 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class HealthController{
+    +checkHealth()
+    +getUsageMetrics()
+}
+
+class RequestController{
+    +sortByReturnRate()
+    +sortByTotalGain()
+}
+
+class RequestValidator{
+}
+RequestController "1" *- "1" RequestValidator
+
+class ConcurrencyManager{
+}
+RequestController "1" *- "1" ConcurrencyManager
+
+class CacheHelper{
+}
+RequestController "1" *- "1" CacheHelper
+
+
+package cache{
+    class CachableData{
+    }
+
+    class CacheInterface{
+    }
+    CacheHelper --> CacheInterface
+
+    CacheInterface --> CachableData
+
+    class SimpleCache implements CacheInterface{
+    }
+
+    class CachingStrategy{
+    }
+    CachingStrategy --> CacheInterface
+
+    class AfterHourStrategy{
+    }
+    AfterHourStrategy --> CacheInterface
+}
+
+package stock{
+    class Stock{
+    }
+
+    class StockWithPrice extends Stock{
+    }
+
+    class RequestModel{
+    }
+    RequestModel "1" *- "..*" Stock
+    RequestController "1" *- "1" RequestModel
+
+    class ResponseModel{
+    }
+    ResponseModel "1" *- "..*" StockWithPrice
+    RequestController "1" *- "1" ResponseModel
+
+}
+
+package price_handler{
+
+    class YahooWebAdapter{
+    }
+    ConcurrencyManager --> YahooWebAdapter
+
+    interface APIHandler{
+    }
+    ConcurrencyManager --> APIHandler
+
+    class YFinanceService implements APIHandler{
+    }
+
+    class StockPulseService implements APIHandler{
+    }
+
+
+}
+
+
+
+
+@enduml
