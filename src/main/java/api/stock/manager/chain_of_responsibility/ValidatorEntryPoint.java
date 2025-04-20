@@ -12,9 +12,12 @@ public class ValidatorEntryPoint implements RequestValidator {
 
     LinkedList<RequestValidator> validatorChain = new LinkedList<>();
 
-    @Autowired AccessKeyValidator accessKeyValidator;
-    @Autowired RequestSizeValidator sizeValidator;
-    @Autowired StockBodyValidator bodyValidator;
+    @Autowired
+    AccessKeyValidator accessKeyValidator;
+    @Autowired
+    RequestSizeValidator sizeValidator;
+    @Autowired
+    StockBodyValidator bodyValidator;
 
     @PostConstruct
     public void init() {

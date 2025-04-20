@@ -1,8 +1,9 @@
 package api.stock.manager;
 
+import com.sun.management.OperatingSystemMXBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.sun.management.OperatingSystemMXBean;
+
 import java.lang.management.ManagementFactory;
 
 
@@ -17,7 +18,7 @@ class HealthController {
     }
 
     @GetMapping("/usage")
-    public String getUsageMetrics(){
+    public String getUsageMetrics() {
         double systemCpuLoad = osBean.getSystemCpuLoad() * 100;
 
         long totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();

@@ -1,66 +1,83 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class HealthController{
-    +checkHealth()
-    +getUsageMetrics()
-}
+package controller{
+    class RequestController{
+        +sortByReturnRate()
+        +sortByTotalGain()
+    }
 
-class RequestController{
-    +sortByReturnRate()
-    +sortByTotalGain()
-}
+    class RequestValidator{
+        +validate()
+    }
+    RequestController "1" *- "1" RequestValidator
 
-class RequestValidator{
-}
-RequestController "1" *- "1" RequestValidator
+    class ConcurrencyManager{
+        +getPriceMultiStock()
+        -createFlatMap()
+    }
+    RequestController "1" *- "1" ConcurrencyManager
 
-class ConcurrencyManager{
+    class CacheHelper{
+        -m_cache
+        +buildPartialResult()
+    }
+    RequestController "1" *- "1" CacheHelper
 }
-RequestController "1" *- "1" ConcurrencyManager
-
-class CacheHelper{
-}
-RequestController "1" *- "1" CacheHelper
-
 
 package cache{
     class CachableData{
+        +ticker
+        +price
+        +lastUpdated
     }
 
     class CacheInterface{
+        +addData()
+        +removeData()
+        +getData()
     }
-    CacheHelper --> CacheInterface
+    CacheHelper "1" o- "1" CacheInterface
 
-    CacheInterface --> CachableData
+    CacheInterface "1" *- "0...*" CachableData
 
     class SimpleCache implements CacheInterface{
     }
 
     class CachingStrategy{
+        +getPrice(Stock stock)
+        +getPrice(List<Stock> stocks)
     }
-    CachingStrategy --> CacheInterface
+    CachingStrategy "1" o- "1" CacheInterface
+    ConcurrencyManager --> CachingStrategy
 
-    class AfterHourStrategy{
-    }
-    AfterHourStrategy --> CacheInterface
 }
 
 package stock{
     class Stock{
+        +ticker
+        +totalCost
+        +quantity
     }
 
     class StockWithPrice extends Stock{
+        +price
+        +returnRate
+        +gain
     }
 
     class RequestModel{
+        -accessKey
+        +List<Stock> stocks
+
     }
-    RequestModel "1" *- "..*" Stock
+    RequestModel "1" *- "*" Stock
     RequestController "1" *- "1" RequestModel
 
     class ResponseModel{
+        +List<StockWithPrice> stocks
     }
-    ResponseModel "1" *- "..*" StockWithPrice
+    ResponseModel "1" *- "*" StockWithPrice
     RequestController "1" *- "1" ResponseModel
 
 }
@@ -68,10 +85,15 @@ package stock{
 package price_handler{
 
     class YahooWebAdapter{
+        +buildURL()
+        -scrapePage()
+        +getPrice()
     }
     ConcurrencyManager --> YahooWebAdapter
 
     interface APIHandler{
+        +getPrice(Stock stock)
+        +getPrice(List<Stock> stocks)
     }
     ConcurrencyManager --> APIHandler
 

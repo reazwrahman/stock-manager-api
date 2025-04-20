@@ -16,7 +16,7 @@ public class ValidationRunner {
         testStockBodyValidator();
     }
 
-    public static void testAccessKeyValidator(){
+    public static void testAccessKeyValidator() {
         System.out.println();
         System.out.println("------- TESTING ACCESS KEY VALIDATOR -------- ");
         RequestModel request = new RequestModel();
@@ -31,7 +31,7 @@ public class ValidationRunner {
         System.out.println(validator.validate(request).errorMessage);
     }
 
-    public static void testRequestSizeValidator(){
+    public static void testRequestSizeValidator() {
         System.out.println();
         System.out.println("------- TESTING REQUEST SIZE VALIDATOR -------- ");
         RequestModel request = new RequestModel();
@@ -48,7 +48,7 @@ public class ValidationRunner {
         System.out.println(validator.validate(request).errorMessage);
     }
 
-    public static void testStockBodyValidator(){
+    public static void testStockBodyValidator() {
         System.out.println();
         System.out.println("------- TESTING REQUEST SIZE VALIDATOR -------- ");
         RequestModel request = new RequestModel();
@@ -64,7 +64,7 @@ public class ValidationRunner {
         System.out.println(validator.validate(request).errorMessage);
     }
 
-    private static ValidatorEntryPoint setupValidator(){
+    private static ValidatorEntryPoint setupValidator() {
         ValidatorEntryPoint validator = new ValidatorEntryPoint();
         validator.accessKeyValidator = new AccessKeyValidator();
         validator.sizeValidator = new RequestSizeValidator();
