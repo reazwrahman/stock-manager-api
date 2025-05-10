@@ -3,7 +3,6 @@ package api.stock.manager.strategy;
 import api.stock.manager.adapter.PriceHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +25,12 @@ public class NoCacheStrategy implements PriceRetrievalStrategy {
 
 
     @Override
-    public BigDecimal getPrice(String ticker) throws IOException {
+    public BigDecimal getPrice(String ticker) throws Exception {
         return m_priceHandler.getPrice(ticker);
     }
 
     @Override
-    public Map<String, BigDecimal> getPrice(List<String> tickers) throws IOException {
+    public Map<String, BigDecimal> getPrice(List<String> tickers) throws Exception {
         return m_priceHandler.getPrice(tickers);
     }
 }

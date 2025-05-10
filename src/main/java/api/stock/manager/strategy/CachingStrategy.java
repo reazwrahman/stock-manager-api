@@ -5,7 +5,6 @@ import api.stock.manager.strategy.cache.CachableData;
 import api.stock.manager.strategy.cache.CacheInterface;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +38,7 @@ public class CachingStrategy implements PriceRetrievalStrategy {
     }
 
     @Override
-    public BigDecimal getPrice(String ticker) throws IOException {
+    public BigDecimal getPrice(String ticker) throws Exception {
         BigDecimal price;
         CachableData data = m_cache.getData(ticker);
         if (data != null && checkIfWithinExpiration(data.getLastUpdated())) {
@@ -54,7 +53,7 @@ public class CachingStrategy implements PriceRetrievalStrategy {
 
 
     @Override
-    public Map<String, BigDecimal> getPrice(List<String> tickers) throws IOException {
+    public Map<String, BigDecimal> getPrice(List<String> tickers) throws Exception {
         Map<String, BigDecimal> result = new HashMap<>();
 
         for (String ticker : tickers) {

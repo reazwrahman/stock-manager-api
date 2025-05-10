@@ -3,7 +3,6 @@ package api.stock.manager.facade;
 import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.strategy.PriceRetrievalStrategy;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class ConcurrencyManager {
             CompletableFuture<Map<String, BigDecimal>> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     return m_cachingStrategy.getPrice(batch);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }, executor);

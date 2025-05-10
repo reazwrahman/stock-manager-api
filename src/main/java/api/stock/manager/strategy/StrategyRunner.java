@@ -4,12 +4,11 @@ import api.stock.manager.adapter.PriceHandler;
 import api.stock.manager.adapter.YahooWebAdapter;
 import api.stock.manager.strategy.cache.SimpleCache;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StrategyRunner {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         System.out.println("---- STRATEGY PATTERN: TESTING SWITCHING STRATEGIES AT RUNTIME");
         PriceHandler adapter = new YahooWebAdapter();
 
@@ -29,7 +28,7 @@ public class StrategyRunner {
         System.out.println(strategy.getDescription());
     }
 
-    public static void testCachingStrategy() throws IOException, InterruptedException {
+    public static void testCachingStrategy() throws Exception {
         System.out.println("----- TESTING CACHING STRATEGY ------");
         PriceHandler adapter = new YahooWebAdapter();
         List<String> stocks = new ArrayList<>();

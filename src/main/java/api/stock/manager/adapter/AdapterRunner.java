@@ -5,13 +5,12 @@ import api.stock.manager.adapter.apis.YFinanceService;
 import api.stock.manager.stock.Stock;
 import api.stock.manager.stock.StockWithPrice;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterRunner {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         System.out.println("---- Testing Adapter Runner -----");
         testAdapterPattern(new YahooWebAdapter());
         testAdapterPattern(new YFinanceService());
@@ -21,7 +20,7 @@ public class AdapterRunner {
 
     }
 
-    public static void testAdapterPattern(PriceHandler handler) throws IOException {
+    public static void testAdapterPattern(PriceHandler handler) throws Exception {
         System.out.println(handler.getDescription());
         Stock stock = new Stock("AAPL", new BigDecimal(50.00), new BigDecimal(621.21));
         StockWithPrice enhancedStock = new StockWithPrice(stock, handler.getPrice(stock.getTicker()));
@@ -29,7 +28,7 @@ public class AdapterRunner {
         System.out.println();
     }
 
-    public static void testWebScraper() throws IOException {
+    public static void testWebScraper() throws Exception {
         System.out.println("---- Testing Yahoo Web Scraper -----");
         YahooWebAdapter scraper = new YahooWebAdapter();
         List<String> stocks = new ArrayList<>();
