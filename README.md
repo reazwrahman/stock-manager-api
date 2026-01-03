@@ -37,4 +37,5 @@ caching results, and sorting stocks based on various criteria.
 ### Optional docker commands
 
 - to verify docker daemon is running: `sudo docker ps`
-- verify local host is running ok: `curl http://localhost:8080/health`
+- verify local host is running ok: `curl http://localhost:<target_port>/health`
+- verify cpu and memory usage at: `/usage`
