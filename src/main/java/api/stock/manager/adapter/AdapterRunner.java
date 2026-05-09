@@ -22,9 +22,9 @@ public class AdapterRunner {
 
     public static void testAdapterPattern(PriceHandler handler) throws Exception {
         System.out.println(handler.getDescription());
-        Stock stock = new Stock("AAPL", new BigDecimal(50.00), new BigDecimal(621.21));
+        Stock stock = new Stock("AAPL", new BigDecimal(50.00), new BigDecimal(621.21), "test");
         StockWithPrice enhancedStock = new StockWithPrice(stock, handler.getPrice(stock.getTicker()));
-        System.out.println("Return rate: " + enhancedStock.getReturnRate());
+        System.out.println("Return rate: " + enhancedStock.returnRate);
         System.out.println();
     }
 

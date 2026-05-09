@@ -14,7 +14,7 @@ public class StockWithPrice extends Stock {
     public BigDecimal returnRate;
 
     public StockWithPrice(Stock baseStock, BigDecimal price) {
-        super(baseStock.ticker, baseStock.quantity, baseStock.totalCost);
+        super(baseStock.ticker, baseStock.quantity, baseStock.totalCost, baseStock.source);
         this.price = price;
         calculateGains();
     }

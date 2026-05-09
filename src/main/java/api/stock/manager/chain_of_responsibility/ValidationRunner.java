@@ -22,7 +22,7 @@ public class ValidationRunner {
         RequestModel request = new RequestModel();
         request.setAccessKey("The end is nigh");
         List<Stock> stocks = new ArrayList<>();
-        stocks.add(new Stock("TSLA", new BigDecimal(12), new BigDecimal(13)));
+        stocks.add(new Stock("TSLA", new BigDecimal(12), new BigDecimal(13), "test"));
         request.setStocks(stocks);
 
         ValidatorEntryPoint validator = setupValidator();
@@ -37,8 +37,8 @@ public class ValidationRunner {
         RequestModel request = new RequestModel();
         request.setAccessKey("The end is nigh");
         List<Stock> stocks = new ArrayList<>();
-        stocks.add(new Stock("TSLA", new BigDecimal(12), new BigDecimal(13)));
-        stocks.add(new Stock("AAPL", new BigDecimal(11), new BigDecimal(13)));
+        stocks.add(new Stock("TSLA", new BigDecimal(12), new BigDecimal(13), "test"));
+        stocks.add(new Stock("AAPL", new BigDecimal(11), new BigDecimal(13), "test"));
 
         request.setStocks(stocks);
 
@@ -54,7 +54,7 @@ public class ValidationRunner {
         RequestModel request = new RequestModel();
         request.setAccessKey("The end is nigh");
         List<Stock> stocks = new ArrayList<>();
-        stocks.add(new Stock("", new BigDecimal(10), new BigDecimal(13)));
+        stocks.add(new Stock("", new BigDecimal(10), new BigDecimal(13),"test"));
 
         request.setStocks(stocks);
 
